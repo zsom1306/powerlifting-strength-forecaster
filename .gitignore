@@ -1,0 +1,28 @@
+# Local environments and configuration
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+
+# Python caches and build output
+__pycache__/
+*.py[cod]
+*.egg-info/
+/build/
+/dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+.coverage
+htmlcov/
+
+# Datasets and generated model artifacts
+/data/
+/models/
+/artifacts/
+
+# Operating system files
+.DS_Store
+Thumbs.db

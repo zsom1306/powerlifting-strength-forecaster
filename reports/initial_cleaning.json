@@ -1,0 +1,11 @@
+{
+  "archive_sha256": "32a90763bff87e3e88174cae0dab0c5ee0b178b0db0cbee6027accdd5f350f98",
+  "csv_member": "openpowerlifting-2026-09-26/openpowerlifting-2026-09-26-f231b4f6.csv",
+  "output_file": "full_power_results.csv",
+  "duplicates_resolved": false,
+  "input_rows": 4036909,
+  "excluded_non_sbd": 1121123,
+  "excluded_invalid_total": 217447,
+  "nonpositive_best_lifts_to_missing": 0,
+  "output_rows": 2698339
+}

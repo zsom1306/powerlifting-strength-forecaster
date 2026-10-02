@@ -1,0 +1,23 @@
+{
+  "input_file": "full_power_results.csv",
+  "input_sha256": "1e28951a547a1877bd89cd463a66199527d5013376b5cbb98d7963431a15d6e6",
+  "output_file": "lifter_meets.csv",
+  "input_rows": 2698339,
+  "duplicate_groups": 113554,
+  "rows_in_duplicate_groups": 232443,
+  "conflicting_groups": 10472,
+  "conflicting_groups_by_column": {
+    "Sex": 118,
+    "Equipment": 5691,
+    "MeetCountry": 115,
+    "TotalKg": 9144,
+    "Best3SquatKg": 8349,
+    "Best3BenchKg": 8059,
+    "Best3DeadliftKg": 8123
+  },
+  "excluded_conflicting_rows": 22538,
+  "collapsed_duplicate_rows": 106823,
+  "output_rows": 2568978,
+  "selection_policy": "Most nonmissing fields, then ascending source-column values; whole rows only.",
+  "conflict_policy": "Exclude all rows for days with conflicting nonmissing context or performance values."
+}

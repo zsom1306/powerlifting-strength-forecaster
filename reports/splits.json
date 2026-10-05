@@ -1,0 +1,33 @@
+{
+  "input_file": "lifter_histories.csv",
+  "input_sha256": "2c2d8b6917e993bfc9a48af71f64ef22dc47764636c4d8bd17833fed24181407",
+  "input_rows": 1780795,
+  "split_column": "target_date",
+  "validation_start": "2023-01-01",
+  "test_start": "2025-01-01",
+  "history_policy": "Prior results remain available across split boundaries; lifter overlap is allowed.",
+  "test_policy": "Reserve test outcomes for final evaluation after model and feature choices are fixed.",
+  "splits": {
+    "train": {
+      "file": "train.csv",
+      "rows": 1213356,
+      "lifters": 301571,
+      "first_target_date": "1965-09-04",
+      "last_target_date": "2022-12-27"
+    },
+    "validation": {
+      "file": "validation.csv",
+      "rows": 296583,
+      "lifters": 121986,
+      "first_target_date": "2023-01-01",
+      "last_target_date": "2024-12-29"
+    },
+    "test": {
+      "file": "test.csv",
+      "rows": 270856,
+      "lifters": 116405,
+      "first_target_date": "2025-01-01",
+      "last_target_date": "2026-09-20"
+    }
+  }
+}

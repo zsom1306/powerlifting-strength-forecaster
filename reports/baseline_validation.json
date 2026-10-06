@@ -1,0 +1,68 @@
+{
+  "inputs": {
+    "train": {
+      "file": "train.csv",
+      "sha256": "41455560c3346de3e1277e6a22ef82a255e883723e24663821051d9de1f95e5a"
+    },
+    "validation": {
+      "file": "validation.csv",
+      "sha256": "90d20ea805a9404c4a8b39493f6a91a36765c43b42e26249416ce7097a42898f"
+    }
+  },
+  "training_rows": 1213356,
+  "validation_rows": 296583,
+  "validation_start": "2023-01-01",
+  "test_start": "2025-01-01",
+  "experience_bands": [
+    "1",
+    "2",
+    "3-4",
+    "5-8",
+    "9-16",
+    "17+"
+  ],
+  "fitted_parameters": {
+    "global_drift": 13.76848865460755,
+    "experience_drift": {
+      "1": 27.02062990141625,
+      "2": 17.625212707375926,
+      "3-4": 12.283580340846084,
+      "5-8": 7.21052727596711,
+      "9-16": 2.767365496092335,
+      "17+": -1.684586023089492
+    },
+    "experience_counts": {
+      "1": 301571,
+      "2": 199758,
+      "3-4": 247091,
+      "5-8": 235702,
+      "9-16": 154568,
+      "17+": 74666
+    }
+  },
+  "unseen_experience_policy": "Use the training-wide mean change.",
+  "validation_metrics": {
+    "persistence": {
+      "mae_kg": 31.046869409237885,
+      "rmse_kg": 54.14555810269874,
+      "r2_total": 0.889987798550233,
+      "mae_reduction_vs_persistence_pct": 0.0,
+      "mae_reduction_vs_experience_drift_pct": -14.706327267903397
+    },
+    "global_drift": {
+      "mae_kg": 27.49695730025033,
+      "rmse_kg": 52.27660995926876,
+      "r2_total": 0.897451332970256,
+      "mae_reduction_vs_persistence_pct": 11.434042067801176,
+      "mae_reduction_vs_experience_drift_pct": -1.5907575536616259
+    },
+    "experience_drift": {
+      "mae_kg": 27.06639655258606,
+      "rmse_kg": 51.62180721930284,
+      "r2_total": 0.9000042376872446,
+      "mae_reduction_vs_persistence_pct": 12.820850966273111,
+      "mae_reduction_vs_experience_drift_pct": 0.0
+    }
+  },
+  "best_validation_baseline": "experience_drift"
+}

@@ -1,0 +1,40 @@
+{
+  "input_file": "lifter_meets.csv",
+  "input_sha256": "e0c1cab546920523957b1b62a104cf462f79f45703cdbe0c18c82170219b5045",
+  "output_file": "lifter_features.csv",
+  "input_rows": 2568978,
+  "input_lifters": 788183,
+  "excluded_first_meets": 788183,
+  "output_rows": 1780795,
+  "output_lifters": 429182,
+  "feature_columns": [
+    "previous_total",
+    "previous_squat",
+    "previous_bench",
+    "previous_deadlift",
+    "prior_meets",
+    "days_since_previous_meet",
+    "days_since_first_meet",
+    "historical_best_total",
+    "recent_mean_total_3",
+    "mean_prior_gap_days",
+    "estimated_age",
+    "sex",
+    "equipment",
+    "federation",
+    "tested_category"
+  ],
+  "target": "delta_total = target_total - previous_total (kg)",
+  "date_assumption": "The target meet date is known when forecasting.",
+  "history_scope": "Prior retained, valid full-power meets under the same source name.",
+  "categorical_features": [
+    "sex",
+    "equipment",
+    "federation"
+  ],
+  "context_assumption": "Target date and sex, equipment, federation, and tested categories are known at entry; results metadata is their proxy.",
+  "age_policy": "Latest finite positive age reported strictly before the target meet, plus elapsed days / 365.25; otherwise missing.",
+  "recent_mean_policy": "Mean of up to three prior retained totals.",
+  "gap_policy": "Mean of completed gaps between prior retained meets; missing with only one prior meet.",
+  "tested_policy": "1 for a drug-tested entry category ('Yes'), 0 for blank; not an individual test result."
+}

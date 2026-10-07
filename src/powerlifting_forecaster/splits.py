@@ -98,7 +98,7 @@ def split_history_file(
 def main() -> None:
     """Write chronological train, validation, and final test files with a split audit."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", type=Path, default=Path("data/processed/lifter_histories.csv"))
+    parser.add_argument("--input", type=Path, default=Path("data/processed/lifter_features.csv"))
     parser.add_argument("--output-dir", type=Path, default=Path("data/processed/splits"))
     parser.add_argument("--report", type=Path, default=Path("reports/splits.json"))
     parser.add_argument("--validation-start", default=VALIDATION_START)

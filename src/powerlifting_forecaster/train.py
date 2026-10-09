@@ -46,6 +46,7 @@ def prepare_features(
 
 def train_regressor(
     train: pd.DataFrame, validation: pd.DataFrame,
+    parameters: dict[str, object] | None = None,
 ) -> tuple[lgb.LGBMRegressor, dict[str, object]]:
     """Fit delta targets and score reconstructed totals against identical baseline rows."""
     # Reuse the chronological and target-consistency checks from baseline evaluation.
@@ -55,7 +56,7 @@ def train_regressor(
         column: train_features[column].cat.categories.tolist() for column in CATEGORICAL_FEATURES
     }
     validation_features = prepare_features(validation, categories)
-    model = lgb.LGBMRegressor(**MODEL_PARAMETERS)
+    model = lgb.LGBMRegressor(**(MODEL_PARAMETERS | (parameters or {})))
     model.fit(
         train_features, train["delta_total"],
         eval_X=validation_features, eval_y=validation["delta_total"],
@@ -97,13 +98,8 @@ def train_regressor(
     }
 
 
-def main() -> None:
-    """Read train/validation splits and save a local model plus a reproducible report."""
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--data-dir", type=Path, default=Path("data/processed/splits"))
-    parser.add_argument("--model", type=Path, default=Path("models/lightgbm_delta.txt"))
-    parser.add_argument("--report", type=Path, default=Path("reports/lightgbm_validation.json"))
-    args = parser.parse_args()
+def load_training_splits(data_dir: Path) -> tuple[dict[str, pd.DataFrame], dict[str, object]]:
+    """Load and hash training and validation inputs without opening the final test file."""
     columns = ["target_date", "target_total", "delta_total", *FEATURE_COLUMNS]
     dtypes = {
         column: "string" if column in ["target_date", *CATEGORICAL_FEATURES] else "float64"
@@ -111,28 +107,45 @@ def main() -> None:
     }
     frames, inputs = {}, {}
     for name in ["train", "validation"]:
-        path = args.data_dir / f"{name}.csv"
+        path = data_dir / f"{name}.csv"
         with path.open("rb") as source:
             checksum = hashlib.file_digest(source, "sha256").hexdigest()
         frames[name] = pd.read_csv(
             path, usecols=columns, dtype=dtypes, keep_default_na=False, na_values=[""],
         )
         inputs[name] = {"file": path.name, "sha256": checksum}
-    model, report = train_regressor(frames["train"], frames["validation"])
-    args.model.parent.mkdir(parents=True, exist_ok=True)
-    model.booster_.save_model(str(args.model), num_iteration=model.best_iteration_)
-    with args.model.open("rb") as source:
+    return frames, inputs
+
+
+def save_training_run(
+    model: lgb.LGBMRegressor, report: dict[str, object], model_path: Path, report_path: Path,
+) -> None:
+    """Save the selected trees and record the model checksum with its evaluation report."""
+    model_path.parent.mkdir(parents=True, exist_ok=True)
+    model.booster_.save_model(str(model_path), num_iteration=model.best_iteration_)
+    with model_path.open("rb") as source:
         model_checksum = hashlib.file_digest(source, "sha256").hexdigest()
     report = {
-        "inputs": inputs, **report,
-        "model_file": args.model.name, "model_sha256": model_checksum,
+        **report, "model_file": model_path.name, "model_sha256": model_checksum,
     }
-    args.report.parent.mkdir(parents=True, exist_ok=True)
-    args.report.write_text(json.dumps(report, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(json.dumps(report, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     for name, metrics in report["validation_metrics"].items():
         print(f"{name}: MAE {metrics['mae_kg']:.2f} kg; RMSE {metrics['rmse_kg']:.2f} kg")
-    print(f"Selected {report['best_iteration']} trees; saved model: {args.model.resolve()}")
-    print(f"Saved report: {args.report.resolve()}")
+    print(f"Selected {report['best_iteration']} trees; saved model: {model_path.resolve()}")
+    print(f"Saved report: {report_path.resolve()}")
+
+
+def main() -> None:
+    """Read train/validation splits and save a local model plus a reproducible report."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--data-dir", type=Path, default=Path("data/processed/splits"))
+    parser.add_argument("--model", type=Path, default=Path("models/lightgbm_delta.txt"))
+    parser.add_argument("--report", type=Path, default=Path("reports/lightgbm_validation.json"))
+    args = parser.parse_args()
+    frames, inputs = load_training_splits(args.data_dir)
+    model, report = train_regressor(frames["train"], frames["validation"])
+    save_training_run(model, {"inputs": inputs, **report}, args.model, args.report)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,226 @@
+{
+  "inputs": {
+    "train": {
+      "file": "train.csv",
+      "sha256": "e690d4e68e1a1f83e978af0d3aef067b094e212b12ee0b074153e6becf2ad80e"
+    },
+    "validation": {
+      "file": "validation.csv",
+      "sha256": "33078ca61d1e3e634cd096fe0c74952391ee6a9ba74539f1515917d7c3e50668"
+    }
+  },
+  "training_rows": 1213356,
+  "validation_rows": 296583,
+  "validation_start": "2023-01-01",
+  "test_start": "2025-01-01",
+  "experience_bands": [
+    "1",
+    "2",
+    "3-4",
+    "5-8",
+    "9-16",
+    "17+"
+  ],
+  "fitted_parameters": {
+    "global_drift": 13.76848865460755,
+    "experience_drift": {
+      "1": 27.02062990141625,
+      "2": 17.625212707375926,
+      "3-4": 12.283580340846084,
+      "5-8": 7.21052727596711,
+      "9-16": 2.767365496092335,
+      "17+": -1.684586023089492
+    },
+    "experience_counts": {
+      "1": 301571,
+      "2": 199758,
+      "3-4": 247091,
+      "5-8": 235702,
+      "9-16": 154568,
+      "17+": 74666
+    }
+  },
+  "unseen_experience_policy": "Use the training-wide mean change.",
+  "validation_metrics": {
+    "persistence": {
+      "mae_kg": 31.046869409237885,
+      "rmse_kg": 54.14555810269874,
+      "r2_total": 0.889987798550233,
+      "mae_reduction_vs_persistence_pct": 0.0,
+      "mae_reduction_vs_experience_drift_pct": -14.706327267903397
+    },
+    "global_drift": {
+      "mae_kg": 27.49695730025033,
+      "rmse_kg": 52.27660995926876,
+      "r2_total": 0.897451332970256,
+      "mae_reduction_vs_persistence_pct": 11.434042067801176,
+      "mae_reduction_vs_experience_drift_pct": -1.5907575536616259
+    },
+    "experience_drift": {
+      "mae_kg": 27.06639655258606,
+      "rmse_kg": 51.62180721930284,
+      "r2_total": 0.9000042376872446,
+      "mae_reduction_vs_persistence_pct": 12.820850966273111,
+      "mae_reduction_vs_experience_drift_pct": 0.0
+    },
+    "lightgbm": {
+      "mae_kg": 23.690118489774346,
+      "rmse_kg": 43.003181582140314,
+      "r2_total": 0.9306068883224614,
+      "mae_reduction_vs_persistence_pct": 23.69562876853073,
+      "mae_reduction_vs_experience_drift_pct": 12.474058215514939
+    }
+  },
+  "best_validation_baseline": "experience_drift",
+  "target": "delta_total = target_total - previous_total",
+  "prediction": "predicted_total = previous_total + predicted_delta",
+  "feature_columns": [
+    "previous_total",
+    "previous_squat",
+    "previous_bench",
+    "previous_deadlift",
+    "prior_meets",
+    "days_since_previous_meet",
+    "days_since_first_meet",
+    "historical_best_total",
+    "recent_mean_total_3",
+    "mean_prior_gap_days",
+    "estimated_age",
+    "sex",
+    "equipment",
+    "federation",
+    "tested_category"
+  ],
+  "categorical_features": [
+    "sex",
+    "equipment",
+    "federation"
+  ],
+  "category_policy": "Levels come from training only; unseen categories become missing.",
+  "training_category_counts": {
+    "sex": 3,
+    "equipment": 6,
+    "federation": 349
+  },
+  "validation_unseen_category_rows": {
+    "sex": 0,
+    "equipment": 0,
+    "federation": 8416
+  },
+  "model_parameters": {
+    "boosting_type": "gbdt",
+    "class_weight": null,
+    "colsample_bytree": 1.0,
+    "importance_type": "split",
+    "learning_rate": 0.05,
+    "max_depth": -1,
+    "min_child_samples": 300,
+    "min_child_weight": 0.001,
+    "min_split_gain": 0.0,
+    "n_estimators": 1000,
+    "n_jobs": 4,
+    "num_leaves": 127,
+    "objective": "regression_l1",
+    "random_state": 42,
+    "reg_alpha": 0.0,
+    "reg_lambda": 10.0,
+    "subsample": 1.0,
+    "subsample_for_bin": 200000,
+    "subsample_freq": 0,
+    "metric": "l1",
+    "deterministic": true,
+    "force_col_wise": true,
+    "verbosity": -1
+  },
+  "early_stopping_rounds": 50,
+  "best_iteration": 341,
+  "evaluated_iterations": 391,
+  "selection_policy": "Lowest validation MAE across four prespecified configurations; exact ties prefer fewer leaves, then fewer trees. Final test is not loaded.",
+  "python_version": "3.13.14",
+  "package_versions": {
+    "lightgbm": "4.7.0",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1"
+  },
+  "base_parameters": {
+    "objective": "regression_l1",
+    "metric": "l1",
+    "n_estimators": 1000,
+    "learning_rate": 0.05,
+    "num_leaves": 31,
+    "min_child_samples": 100,
+    "reg_lambda": 1.0,
+    "random_state": 42,
+    "n_jobs": 4,
+    "deterministic": true,
+    "force_col_wise": true,
+    "verbosity": -1
+  },
+  "selected_candidate": "regularized_127",
+  "tuning_trials": [
+    {
+      "candidate": "initial",
+      "parameter_overrides": {},
+      "best_iteration": 522,
+      "evaluated_iterations": 572,
+      "validation_metrics": {
+        "mae_kg": 23.805801249254074,
+        "rmse_kg": 43.3796230382062,
+        "r2_total": 0.9293866632868708,
+        "mae_reduction_vs_persistence_pct": 23.323021927065078,
+        "mae_reduction_vs_experience_drift_pct": 12.046654592520746
+      }
+    },
+    {
+      "candidate": "leaves_63",
+      "parameter_overrides": {
+        "num_leaves": 63
+      },
+      "best_iteration": 607,
+      "evaluated_iterations": 657,
+      "validation_metrics": {
+        "mae_kg": 23.71690445783431,
+        "rmse_kg": 42.914740194205116,
+        "r2_total": 0.930892025928716,
+        "mae_reduction_vs_persistence_pct": 23.609352861910672,
+        "mae_reduction_vs_experience_drift_pct": 12.375094291713983
+      }
+    },
+    {
+      "candidate": "leaves_127",
+      "parameter_overrides": {
+        "num_leaves": 127
+      },
+      "best_iteration": 255,
+      "evaluated_iterations": 305,
+      "validation_metrics": {
+        "mae_kg": 23.716506456017363,
+        "rmse_kg": 43.11783602235717,
+        "r2_total": 0.9302363652834772,
+        "mae_reduction_vs_persistence_pct": 23.61063480055544,
+        "mae_reduction_vs_experience_drift_pct": 12.376564756451225
+      }
+    },
+    {
+      "candidate": "regularized_127",
+      "parameter_overrides": {
+        "num_leaves": 127,
+        "min_child_samples": 300,
+        "reg_lambda": 10.0
+      },
+      "best_iteration": 341,
+      "evaluated_iterations": 391,
+      "validation_metrics": {
+        "mae_kg": 23.690118489774346,
+        "rmse_kg": 43.003181582140314,
+        "r2_total": 0.9306068883224614,
+        "mae_reduction_vs_persistence_pct": 23.69562876853073,
+        "mae_reduction_vs_experience_drift_pct": 12.474058215514939
+      }
+    }
+  ],
+  "mae_reduction_vs_initial_model_pct": 0.48594356589175547,
+  "model_file": "lightgbm_tuned.txt",
+  "model_sha256": "df27865088fb0572fda42948011c9722ab7a7dea782d064c691ce3a1099633e0"
+}

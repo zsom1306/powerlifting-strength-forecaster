@@ -57,8 +57,10 @@ class TrainingTests(unittest.TestCase):
         validation.loc[501, "estimated_age"] = np.nan
         parameters = {"n_estimators": 60, "learning_rate": 0.2, "num_leaves": 4,
                       "min_child_samples": 5, "n_jobs": 1}
-        with patch.dict(MODEL_PARAMETERS, parameters):
-            model, report = train_regressor(train, validation)
+        original_parameters = MODEL_PARAMETERS.copy()
+        model, report = train_regressor(train, validation, parameters=parameters)
+        self.assertEqual(MODEL_PARAMETERS, original_parameters)
+        self.assertEqual(report["model_parameters"]["num_leaves"], 4)
         restored = lgb.Booster(model_str=model.booster_.model_to_string(num_iteration=model.best_iteration_))
         categories = dict(zip(CATEGORICAL_FEATURES, restored.pandas_categorical, strict=True))
         features = prepare_features(validation, categories)

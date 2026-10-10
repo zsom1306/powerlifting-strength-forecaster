@@ -6,11 +6,12 @@ from unittest.mock import patch
 import pandas as pd
 
 from powerlifting_forecaster.train import MODEL_PARAMETERS
+from powerlifting_forecaster.splits import TEST_START, VALIDATION_START
 from powerlifting_forecaster.tune import CANDIDATES, tune_regressor
 
 
 class TuningTests(unittest.TestCase):
-    def run_candidates(self, errors, iterations):
+    def run_candidates(self, errors, iterations, **boundaries):
         train, validation = pd.DataFrame({"period": ["train"]}), pd.DataFrame({"period": ["validation"]})
         models = [object() for _ in CANDIDATES]
         results = []
@@ -24,12 +25,15 @@ class TuningTests(unittest.TestCase):
             }))
         with patch("powerlifting_forecaster.tune.train_regressor", side_effect=results) as fit:
             with patch("builtins.print"):
-                model, report = tune_regressor(train, validation)
+                model, report = tune_regressor(train, validation, **boundaries)
         self.assertEqual(fit.call_count, 4)
         for call, overrides in zip(fit.call_args_list, CANDIDATES.values(), strict=True):
             self.assertIs(call.args[0], train)
             self.assertIs(call.args[1], validation)
-            self.assertEqual(call.kwargs, {"parameters": overrides})
+            self.assertEqual(call.kwargs, {
+                "parameters": overrides, "validation_start": VALIDATION_START,
+                "test_start": TEST_START, **boundaries,
+            })
         return models.index(model), report
 
     def test_lowest_mae_wins_even_when_other_metrics_are_worse(self):
@@ -56,6 +60,10 @@ class TuningTests(unittest.TestCase):
         selected, report = self.run_candidates([0, 1, 2, 3], [100, 100, 100, 100])
         self.assertEqual(selected, 0)
         self.assertIsNone(report["mae_reduction_vs_initial_model_pct"])
+
+    def test_historical_boundaries_reach_every_candidate(self):
+        self.run_candidates([25, 24, 23, 22], [100, 100, 100, 100],
+                            validation_start="2019-01-01", test_start="2020-01-01")
 
 
 if __name__ == "__main__":

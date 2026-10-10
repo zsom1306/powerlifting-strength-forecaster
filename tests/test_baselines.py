@@ -80,6 +80,17 @@ class BaselineTests(unittest.TestCase):
             self.assertEqual(metrics["mae_kg"], 0)
             self.assertIsNone(metrics["mae_reduction_vs_persistence_pct"])
 
+    def test_custom_periods_preserve_chronology_and_final_test_boundary(self):
+        train = make_frame([1, 2], [10, 20], "2018-01-01")
+        validation = make_frame([1, 2], [20, 10], "2019-01-01")
+        report = evaluate_baselines(train, validation, "2019-01-01", "2020-01-01")
+        self.assertEqual(report["validation_start"], "2019-01-01")
+        self.assertEqual(report["test_start"], "2020-01-01")
+        for start, end in [("2020-01-01", "2019-01-01"), ("2018-01-01", "2020-01-01"),
+                           ("2019-01-01", "2019-01-01"), ("2019-01-01", "2026-01-01")]:
+            with self.subTest(start=start, end=end), self.assertRaises(ValueError):
+                evaluate_baselines(train, validation, start, end)
+
 
 if __name__ == "__main__":
     unittest.main()

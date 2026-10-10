@@ -57,14 +57,22 @@ class DriftBaselines:
         }, index=features.index)
 
 
-def evaluate_baselines(train: pd.DataFrame, validation: pd.DataFrame) -> dict[str, object]:
+def evaluate_baselines(
+    train: pd.DataFrame, validation: pd.DataFrame,
+    validation_start: str = VALIDATION_START, test_start: str = TEST_START,
+) -> dict[str, object]:
     """Fit on the training period and score every baseline on identical validation rows."""
+    validation_date, test_date = pd.to_datetime(
+        [validation_start, test_start], format="%Y-%m-%d", errors="raise",
+    )
+    if not validation_date < test_date <= pd.Timestamp(TEST_START):
+        raise ValueError("Validation bounds must be ordered and precede the reserved final test.")
     train_dates = pd.to_datetime(train["target_date"], format="%Y-%m-%d", errors="raise")
     validation_dates = pd.to_datetime(validation["target_date"], format="%Y-%m-%d", errors="raise")
-    if train.empty or not train_dates.lt(pd.Timestamp(VALIDATION_START)).all():
+    if train.empty or not train_dates.lt(validation_date).all():
         raise ValueError("Training rows must precede the validation period.")
     if validation.empty or not validation_dates.between(
-        pd.Timestamp(VALIDATION_START), pd.Timestamp(TEST_START), inclusive="left",
+        validation_date, test_date, inclusive="left",
     ).all():
         raise ValueError("Validation rows must fall within the reserved validation period.")
     for frame in [train, validation]:
@@ -83,7 +91,7 @@ def evaluate_baselines(train: pd.DataFrame, validation: pd.DataFrame) -> dict[st
             )
     return {
         "training_rows": len(train), "validation_rows": len(validation),
-        "validation_start": VALIDATION_START, "test_start": TEST_START,
+        "validation_start": validation_start, "test_start": test_start,
         "experience_bands": EXPERIENCE_LABELS,
         "fitted_parameters": asdict(model),
         "unseen_experience_policy": "Use the training-wide mean change.",

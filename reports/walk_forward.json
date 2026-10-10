@@ -1,0 +1,954 @@
+{
+  "input_file": "train.csv",
+  "input_sha256": "e690d4e68e1a1f83e978af0d3aef067b094e212b12ee0b074153e6becf2ad80e",
+  "evaluation_years": [
+    2020,
+    2021,
+    2022
+  ],
+  "evaluation_rows": 267669,
+  "feature_columns": [
+    "previous_total",
+    "previous_squat",
+    "previous_bench",
+    "previous_deadlift",
+    "prior_meets",
+    "days_since_previous_meet",
+    "days_since_first_meet",
+    "historical_best_total",
+    "recent_mean_total_3",
+    "mean_prior_gap_days",
+    "estimated_age",
+    "sex",
+    "equipment",
+    "federation",
+    "tested_category"
+  ],
+  "selection_policy": "Repeat the same four candidates within each fold using only the preceding validation year; refit the selected tree count on all earlier data.",
+  "history_policy": "Predict each meet using information known before that meet; earlier results in an evaluation year remain available to later meets. Lifter overlap is allowed.",
+  "holdout_policy": "Use only the original pre-2023 training file; the main validation and final test files are not loaded.",
+  "pooled_metric_policy": "Score concatenated predictions; each meet has equal weight rather than each year.",
+  "folds": [
+    {
+      "evaluation_year": 2020,
+      "selection": {
+        "training_rows": 830584,
+        "validation_rows": 115103,
+        "validation_start": "2019-01-01",
+        "test_start": "2020-01-01",
+        "experience_bands": [
+          "1",
+          "2",
+          "3-4",
+          "5-8",
+          "9-16",
+          "17+"
+        ],
+        "fitted_parameters": {
+          "global_drift": 13.544487481097637,
+          "experience_drift": {
+            "1": 27.123095817468723,
+            "2": 17.2188016001982,
+            "3-4": 11.856094270288269,
+            "5-8": 6.749288893940256,
+            "9-16": 2.310378089551085,
+            "17+": -1.8558557015747739
+          },
+          "experience_counts": {
+            "1": 209586,
+            "2": 137233,
+            "3-4": 168176,
+            "5-8": 158373,
+            "9-16": 103494,
+            "17+": 53722
+          }
+        },
+        "unseen_experience_policy": "Use the training-wide mean change.",
+        "validation_metrics": {
+          "persistence": {
+            "mae_kg": 31.94765132099077,
+            "rmse_kg": 55.2545851072019,
+            "r2_total": 0.8886266621452431,
+            "mae_reduction_vs_persistence_pct": 0.0,
+            "mae_reduction_vs_experience_drift_pct": -12.714293170584945
+          },
+          "global_drift": {
+            "mae_kg": 28.75257003002404,
+            "rmse_kg": 53.639556824299206,
+            "r2_total": 0.8950421434015577,
+            "mae_reduction_vs_persistence_pct": 10.000989615369459,
+            "mae_reduction_vs_experience_drift_pct": -1.441748415557642
+          },
+          "experience_drift": {
+            "mae_kg": 28.34392198391406,
+            "rmse_kg": 52.97448423692456,
+            "r2_total": 0.8976287360793458,
+            "mae_reduction_vs_persistence_pct": 11.280107263186911,
+            "mae_reduction_vs_experience_drift_pct": 0.0
+          },
+          "lightgbm": {
+            "mae_kg": 24.39530461938067,
+            "rmse_kg": 42.87839809037547,
+            "r2_total": 0.9329310209813949,
+            "mae_reduction_vs_persistence_pct": 23.639755629384663,
+            "mae_reduction_vs_experience_drift_pct": 13.93109029432955
+          }
+        },
+        "best_validation_baseline": "experience_drift",
+        "target": "delta_total = target_total - previous_total",
+        "prediction": "predicted_total = previous_total + predicted_delta",
+        "feature_columns": [
+          "previous_total",
+          "previous_squat",
+          "previous_bench",
+          "previous_deadlift",
+          "prior_meets",
+          "days_since_previous_meet",
+          "days_since_first_meet",
+          "historical_best_total",
+          "recent_mean_total_3",
+          "mean_prior_gap_days",
+          "estimated_age",
+          "sex",
+          "equipment",
+          "federation",
+          "tested_category"
+        ],
+        "categorical_features": [
+          "sex",
+          "equipment",
+          "federation"
+        ],
+        "category_policy": "Levels come from training only; unseen categories become missing.",
+        "training_category_counts": {
+          "sex": 3,
+          "equipment": 5,
+          "federation": 264
+        },
+        "validation_unseen_category_rows": {
+          "sex": 0,
+          "equipment": 0,
+          "federation": 786
+        },
+        "model_parameters": {
+          "boosting_type": "gbdt",
+          "class_weight": null,
+          "colsample_bytree": 1.0,
+          "importance_type": "split",
+          "learning_rate": 0.05,
+          "max_depth": -1,
+          "min_child_samples": 100,
+          "min_child_weight": 0.001,
+          "min_split_gain": 0.0,
+          "n_estimators": 1000,
+          "n_jobs": 4,
+          "num_leaves": 127,
+          "objective": "regression_l1",
+          "random_state": 42,
+          "reg_alpha": 0.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "subsample_for_bin": 200000,
+          "subsample_freq": 0,
+          "metric": "l1",
+          "deterministic": true,
+          "force_col_wise": true,
+          "verbosity": -1
+        },
+        "early_stopping_rounds": 50,
+        "best_iteration": 1000,
+        "evaluated_iterations": 1000,
+        "selection_policy": "Lowest validation MAE across four prespecified configurations; exact ties prefer fewer leaves, then fewer trees. Final test is not loaded.",
+        "python_version": "3.13.14",
+        "package_versions": {
+          "lightgbm": "4.7.0",
+          "numpy": "2.5.3",
+          "pandas": "3.0.6",
+          "scikit-learn": "1.9.1"
+        },
+        "base_parameters": {
+          "objective": "regression_l1",
+          "metric": "l1",
+          "n_estimators": 1000,
+          "learning_rate": 0.05,
+          "num_leaves": 31,
+          "min_child_samples": 100,
+          "reg_lambda": 1.0,
+          "random_state": 42,
+          "n_jobs": 4,
+          "deterministic": true,
+          "force_col_wise": true,
+          "verbosity": -1
+        },
+        "selected_candidate": "leaves_127",
+        "tuning_trials": [
+          {
+            "candidate": "initial",
+            "parameter_overrides": {},
+            "best_iteration": 1000,
+            "evaluated_iterations": 1000,
+            "validation_metrics": {
+              "mae_kg": 24.615678907339962,
+              "rmse_kg": 43.38110514352686,
+              "r2_total": 0.9313491665246312,
+              "mae_reduction_vs_persistence_pct": 22.94995754142789,
+              "mae_reduction_vs_experience_drift_pct": 13.153589255184862
+            }
+          },
+          {
+            "candidate": "leaves_63",
+            "parameter_overrides": {
+              "num_leaves": 63
+            },
+            "best_iteration": 1000,
+            "evaluated_iterations": 1000,
+            "validation_metrics": {
+              "mae_kg": 24.444403197710617,
+              "rmse_kg": 42.985086922445134,
+              "r2_total": 0.9325968474380728,
+              "mae_reduction_vs_persistence_pct": 23.486071160261613,
+              "mae_reduction_vs_experience_drift_pct": 13.75786593124454
+            }
+          },
+          {
+            "candidate": "leaves_127",
+            "parameter_overrides": {
+              "num_leaves": 127
+            },
+            "best_iteration": 1000,
+            "evaluated_iterations": 1000,
+            "validation_metrics": {
+              "mae_kg": 24.39530461938067,
+              "rmse_kg": 42.87839809037547,
+              "r2_total": 0.9329310209813949,
+              "mae_reduction_vs_persistence_pct": 23.639755629384663,
+              "mae_reduction_vs_experience_drift_pct": 13.93109029432955
+            }
+          },
+          {
+            "candidate": "regularized_127",
+            "parameter_overrides": {
+              "num_leaves": 127,
+              "min_child_samples": 300,
+              "reg_lambda": 10.0
+            },
+            "best_iteration": 993,
+            "evaluated_iterations": 1000,
+            "validation_metrics": {
+              "mae_kg": 24.41941770875442,
+              "rmse_kg": 42.88658598844504,
+              "r2_total": 0.9329054040544348,
+              "mae_reduction_vs_persistence_pct": 23.564278752754586,
+              "mae_reduction_vs_experience_drift_pct": 13.84601706632873
+            }
+          }
+        ],
+        "mae_reduction_vs_initial_model_pct": 0.8952598414564972
+      },
+      "refit_rows": 945687,
+      "evaluation_rows": 67640,
+      "refit_end_exclusive": "2020-01-01",
+      "evaluation_end_exclusive": "2021-01-01",
+      "refit_parameters": {
+        "boosting_type": "gbdt",
+        "class_weight": null,
+        "colsample_bytree": 1.0,
+        "importance_type": "split",
+        "learning_rate": 0.05,
+        "max_depth": -1,
+        "min_child_samples": 100,
+        "min_child_weight": 0.001,
+        "min_split_gain": 0.0,
+        "n_estimators": 1000,
+        "n_jobs": 4,
+        "num_leaves": 127,
+        "objective": "regression_l1",
+        "random_state": 42,
+        "reg_alpha": 0.0,
+        "reg_lambda": 1.0,
+        "subsample": 1.0,
+        "subsample_for_bin": 200000,
+        "subsample_freq": 0,
+        "metric": "l1",
+        "deterministic": true,
+        "force_col_wise": true,
+        "verbosity": -1
+      },
+      "refit_tree_count": 1000,
+      "baseline_parameters": {
+        "global_drift": 13.510402680802422,
+        "experience_drift": {
+          "1": 26.961408477483793,
+          "2": 17.216134699008453,
+          "3-4": 11.888879537085746,
+          "5-8": 6.856247501043521,
+          "9-16": 2.4583086620269463,
+          "17+": -1.8593221352738873
+        },
+        "experience_counts": {
+          "1": 236674,
+          "2": 155918,
+          "3-4": 192001,
+          "5-8": 182076,
+          "9-16": 118829,
+          "17+": 60189
+        }
+      },
+      "evaluation_metrics": {
+        "persistence": {
+          "mae_kg": 32.28331401537552,
+          "rmse_kg": 55.474472935956555,
+          "r2_total": 0.8826819607043005,
+          "mae_reduction_vs_persistence_pct": 0.0,
+          "mae_reduction_vs_experience_drift_pct": -14.467467586678694
+        },
+        "global_drift": {
+          "mae_kg": 28.51893523765595,
+          "rmse_kg": 53.61785366304494,
+          "r2_total": 0.8904033506393959,
+          "mae_reduction_vs_persistence_pct": 11.660447176912236,
+          "mae_reduction_vs_experience_drift_pct": -1.120048993984879
+        },
+        "experience_drift": {
+          "mae_kg": 28.203047290208882,
+          "rmse_kg": 52.9084907971572,
+          "r2_total": 0.8932840895643439,
+          "mae_reduction_vs_persistence_pct": 12.63893391869042,
+          "mae_reduction_vs_experience_drift_pct": 0.0
+        },
+        "lightgbm": {
+          "mae_kg": 24.251277640422455,
+          "rmse_kg": 42.91588932609576,
+          "r2_total": 0.92978746392351,
+          "mae_reduction_vs_persistence_pct": 24.879838455022487,
+          "mae_reduction_vs_experience_drift_pct": 14.011853432442189
+        }
+      }
+    },
+    {
+      "evaluation_year": 2021,
+      "selection": {
+        "training_rows": 945687,
+        "validation_rows": 67640,
+        "validation_start": "2020-01-01",
+        "test_start": "2021-01-01",
+        "experience_bands": [
+          "1",
+          "2",
+          "3-4",
+          "5-8",
+          "9-16",
+          "17+"
+        ],
+        "fitted_parameters": {
+          "global_drift": 13.510402680802422,
+          "experience_drift": {
+            "1": 26.961408477483793,
+            "2": 17.216134699008453,
+            "3-4": 11.888879537085746,
+            "5-8": 6.856247501043521,
+            "9-16": 2.4583086620269463,
+            "17+": -1.8593221352738873
+          },
+          "experience_counts": {
+            "1": 236674,
+            "2": 155918,
+            "3-4": 192001,
+            "5-8": 182076,
+            "9-16": 118829,
+            "17+": 60189
+          }
+        },
+        "unseen_experience_policy": "Use the training-wide mean change.",
+        "validation_metrics": {
+          "persistence": {
+            "mae_kg": 32.28331401537552,
+            "rmse_kg": 55.474472935956555,
+            "r2_total": 0.8826819607043005,
+            "mae_reduction_vs_persistence_pct": 0.0,
+            "mae_reduction_vs_experience_drift_pct": -14.467467586678694
+          },
+          "global_drift": {
+            "mae_kg": 28.51893523765595,
+            "rmse_kg": 53.61785366304494,
+            "r2_total": 0.8904033506393959,
+            "mae_reduction_vs_persistence_pct": 11.660447176912236,
+            "mae_reduction_vs_experience_drift_pct": -1.120048993984879
+          },
+          "experience_drift": {
+            "mae_kg": 28.203047290208882,
+            "rmse_kg": 52.9084907971572,
+            "r2_total": 0.8932840895643439,
+            "mae_reduction_vs_persistence_pct": 12.63893391869042,
+            "mae_reduction_vs_experience_drift_pct": 0.0
+          },
+          "lightgbm": {
+            "mae_kg": 24.240935603524743,
+            "rmse_kg": 42.87489337716025,
+            "r2_total": 0.9299215426883028,
+            "mae_reduction_vs_persistence_pct": 24.91187369431913,
+            "mae_reduction_vs_experience_drift_pct": 14.048523359600384
+          }
+        },
+        "best_validation_baseline": "experience_drift",
+        "target": "delta_total = target_total - previous_total",
+        "prediction": "predicted_total = previous_total + predicted_delta",
+        "feature_columns": [
+          "previous_total",
+          "previous_squat",
+          "previous_bench",
+          "previous_deadlift",
+          "prior_meets",
+          "days_since_previous_meet",
+          "days_since_first_meet",
+          "historical_best_total",
+          "recent_mean_total_3",
+          "mean_prior_gap_days",
+          "estimated_age",
+          "sex",
+          "equipment",
+          "federation",
+          "tested_category"
+        ],
+        "categorical_features": [
+          "sex",
+          "equipment",
+          "federation"
+        ],
+        "category_policy": "Levels come from training only; unseen categories become missing.",
+        "training_category_counts": {
+          "sex": 3,
+          "equipment": 5,
+          "federation": 291
+        },
+        "validation_unseen_category_rows": {
+          "sex": 0,
+          "equipment": 0,
+          "federation": 387
+        },
+        "model_parameters": {
+          "boosting_type": "gbdt",
+          "class_weight": null,
+          "colsample_bytree": 1.0,
+          "importance_type": "split",
+          "learning_rate": 0.05,
+          "max_depth": -1,
+          "min_child_samples": 100,
+          "min_child_weight": 0.001,
+          "min_split_gain": 0.0,
+          "n_estimators": 1000,
+          "n_jobs": 4,
+          "num_leaves": 127,
+          "objective": "regression_l1",
+          "random_state": 42,
+          "reg_alpha": 0.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "subsample_for_bin": 200000,
+          "subsample_freq": 0,
+          "metric": "l1",
+          "deterministic": true,
+          "force_col_wise": true,
+          "verbosity": -1
+        },
+        "early_stopping_rounds": 50,
+        "best_iteration": 998,
+        "evaluated_iterations": 1000,
+        "selection_policy": "Lowest validation MAE across four prespecified configurations; exact ties prefer fewer leaves, then fewer trees. Final test is not loaded.",
+        "python_version": "3.13.14",
+        "package_versions": {
+          "lightgbm": "4.7.0",
+          "numpy": "2.5.3",
+          "pandas": "3.0.6",
+          "scikit-learn": "1.9.1"
+        },
+        "base_parameters": {
+          "objective": "regression_l1",
+          "metric": "l1",
+          "n_estimators": 1000,
+          "learning_rate": 0.05,
+          "num_leaves": 31,
+          "min_child_samples": 100,
+          "reg_lambda": 1.0,
+          "random_state": 42,
+          "n_jobs": 4,
+          "deterministic": true,
+          "force_col_wise": true,
+          "verbosity": -1
+        },
+        "selected_candidate": "leaves_127",
+        "tuning_trials": [
+          {
+            "candidate": "initial",
+            "parameter_overrides": {},
+            "best_iteration": 1000,
+            "evaluated_iterations": 1000,
+            "validation_metrics": {
+              "mae_kg": 24.46573638001621,
+              "rmse_kg": 43.470973607984675,
+              "r2_total": 0.9279594265950561,
+              "mae_reduction_vs_persistence_pct": 24.215536334454523,
+              "mae_reduction_vs_experience_drift_pct": 13.251443617903435
+            }
+          },
+          {
+            "candidate": "leaves_63",
+            "parameter_overrides": {
+              "num_leaves": 63
+            },
+            "best_iteration": 996,
+            "evaluated_iterations": 1000,
+            "validation_metrics": {
+              "mae_kg": 24.303990234392852,
+              "rmse_kg": 43.11849904797734,
+              "r2_total": 0.929122939751828,
+              "mae_reduction_vs_persistence_pct": 24.71655721956664,
+              "mae_reduction_vs_experience_drift_pct": 13.824949537171637
+            }
+          },
+          {
+            "candidate": "leaves_127",
+            "parameter_overrides": {
+              "num_leaves": 127
+            },
+            "best_iteration": 998,
+            "evaluated_iterations": 1000,
+            "validation_metrics": {
+              "mae_kg": 24.240935603524743,
+              "rmse_kg": 42.87489337716025,
+              "r2_total": 0.9299215426883028,
+              "mae_reduction_vs_persistence_pct": 24.91187369431913,
+              "mae_reduction_vs_experience_drift_pct": 14.048523359600384
+            }
+          },
+          {
+            "candidate": "regularized_127",
+            "parameter_overrides": {
+              "num_leaves": 127,
+              "min_child_samples": 300,
+              "reg_lambda": 10.0
+            },
+            "best_iteration": 992,
+            "evaluated_iterations": 1000,
+            "validation_metrics": {
+              "mae_kg": 24.27682750543805,
+              "rmse_kg": 42.96317170932017,
+              "r2_total": 0.929632666020631,
+              "mae_reduction_vs_persistence_pct": 24.80069582114225,
+              "mae_reduction_vs_experience_drift_pct": 13.921260863658091
+            }
+          }
+        ],
+        "mae_reduction_vs_initial_model_pct": 0.9188392002583923
+      },
+      "refit_rows": 1013327,
+      "evaluation_rows": 81566,
+      "refit_end_exclusive": "2021-01-01",
+      "evaluation_end_exclusive": "2022-01-01",
+      "refit_parameters": {
+        "boosting_type": "gbdt",
+        "class_weight": null,
+        "colsample_bytree": 1.0,
+        "importance_type": "split",
+        "learning_rate": 0.05,
+        "max_depth": -1,
+        "min_child_samples": 100,
+        "min_child_weight": 0.001,
+        "min_split_gain": 0.0,
+        "n_estimators": 998,
+        "n_jobs": 4,
+        "num_leaves": 127,
+        "objective": "regression_l1",
+        "random_state": 42,
+        "reg_alpha": 0.0,
+        "reg_lambda": 1.0,
+        "subsample": 1.0,
+        "subsample_for_bin": 200000,
+        "subsample_freq": 0,
+        "metric": "l1",
+        "deterministic": true,
+        "force_col_wise": true,
+        "verbosity": -1
+      },
+      "refit_tree_count": 998,
+      "baseline_parameters": {
+        "global_drift": 13.559838847677009,
+        "experience_drift": {
+          "1": 26.96646514845502,
+          "2": 17.347621298651436,
+          "3-4": 12.050115684039483,
+          "5-8": 6.996307401885708,
+          "9-16": 2.5601535529539885,
+          "17+": -1.9162705149085444
+        },
+        "experience_counts": {
+          "1": 251524,
+          "2": 166696,
+          "3-4": 206165,
+          "5-8": 196531,
+          "9-16": 128555,
+          "17+": 63856
+        }
+      },
+      "evaluation_metrics": {
+        "persistence": {
+          "mae_kg": 34.00418740651742,
+          "rmse_kg": 57.89922770449906,
+          "r2_total": 0.881671830208028,
+          "mae_reduction_vs_persistence_pct": 0.0,
+          "mae_reduction_vs_experience_drift_pct": -13.06854942519864
+        },
+        "global_drift": {
+          "mae_kg": 30.58947468639411,
+          "rmse_kg": 55.871826855735534,
+          "r2_total": 0.8898135099117782,
+          "mae_reduction_vs_persistence_pct": 10.042035938987992,
+          "mae_reduction_vs_experience_drift_pct": -1.71416505622779
+        },
+        "experience_drift": {
+          "mae_kg": 30.07395741732156,
+          "rmse_kg": 55.091527138348916,
+          "r2_total": 0.8928697229940527,
+          "mae_reduction_vs_persistence_pct": 11.558076486905167,
+          "mae_reduction_vs_experience_drift_pct": 0.0
+        },
+        "lightgbm": {
+          "mae_kg": 26.224555863461223,
+          "rmse_kg": 45.1936630573663,
+          "r2_total": 0.9279062373733747,
+          "mae_reduction_vs_persistence_pct": 22.878451556719483,
+          "mae_reduction_vs_experience_drift_pct": 12.79978388093086
+        }
+      }
+    },
+    {
+      "evaluation_year": 2022,
+      "selection": {
+        "training_rows": 1013327,
+        "validation_rows": 81566,
+        "validation_start": "2021-01-01",
+        "test_start": "2022-01-01",
+        "experience_bands": [
+          "1",
+          "2",
+          "3-4",
+          "5-8",
+          "9-16",
+          "17+"
+        ],
+        "fitted_parameters": {
+          "global_drift": 13.559838847677009,
+          "experience_drift": {
+            "1": 26.96646514845502,
+            "2": 17.347621298651436,
+            "3-4": 12.050115684039483,
+            "5-8": 6.996307401885708,
+            "9-16": 2.5601535529539885,
+            "17+": -1.9162705149085444
+          },
+          "experience_counts": {
+            "1": 251524,
+            "2": 166696,
+            "3-4": 206165,
+            "5-8": 196531,
+            "9-16": 128555,
+            "17+": 63856
+          }
+        },
+        "unseen_experience_policy": "Use the training-wide mean change.",
+        "validation_metrics": {
+          "persistence": {
+            "mae_kg": 34.00418740651742,
+            "rmse_kg": 57.89922770449906,
+            "r2_total": 0.881671830208028,
+            "mae_reduction_vs_persistence_pct": 0.0,
+            "mae_reduction_vs_experience_drift_pct": -13.06854942519864
+          },
+          "global_drift": {
+            "mae_kg": 30.58947468639411,
+            "rmse_kg": 55.871826855735534,
+            "r2_total": 0.8898135099117782,
+            "mae_reduction_vs_persistence_pct": 10.042035938987992,
+            "mae_reduction_vs_experience_drift_pct": -1.71416505622779
+          },
+          "experience_drift": {
+            "mae_kg": 30.07395741732156,
+            "rmse_kg": 55.091527138348916,
+            "r2_total": 0.8928697229940527,
+            "mae_reduction_vs_persistence_pct": 11.558076486905167,
+            "mae_reduction_vs_experience_drift_pct": 0.0
+          },
+          "lightgbm": {
+            "mae_kg": 26.241889547176825,
+            "rmse_kg": 45.246547871745854,
+            "r2_total": 0.9277374129961227,
+            "mae_reduction_vs_persistence_pct": 22.827476412075153,
+            "mae_reduction_vs_experience_drift_pct": 12.742147024314121
+          }
+        },
+        "best_validation_baseline": "experience_drift",
+        "target": "delta_total = target_total - previous_total",
+        "prediction": "predicted_total = previous_total + predicted_delta",
+        "feature_columns": [
+          "previous_total",
+          "previous_squat",
+          "previous_bench",
+          "previous_deadlift",
+          "prior_meets",
+          "days_since_previous_meet",
+          "days_since_first_meet",
+          "historical_best_total",
+          "recent_mean_total_3",
+          "mean_prior_gap_days",
+          "estimated_age",
+          "sex",
+          "equipment",
+          "federation",
+          "tested_category"
+        ],
+        "categorical_features": [
+          "sex",
+          "equipment",
+          "federation"
+        ],
+        "category_policy": "Levels come from training only; unseen categories become missing.",
+        "training_category_counts": {
+          "sex": 3,
+          "equipment": 5,
+          "federation": 301
+        },
+        "validation_unseen_category_rows": {
+          "sex": 0,
+          "equipment": 1,
+          "federation": 442
+        },
+        "model_parameters": {
+          "boosting_type": "gbdt",
+          "class_weight": null,
+          "colsample_bytree": 1.0,
+          "importance_type": "split",
+          "learning_rate": 0.05,
+          "max_depth": -1,
+          "min_child_samples": 100,
+          "min_child_weight": 0.001,
+          "min_split_gain": 0.0,
+          "n_estimators": 1000,
+          "n_jobs": 4,
+          "num_leaves": 127,
+          "objective": "regression_l1",
+          "random_state": 42,
+          "reg_alpha": 0.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "subsample_for_bin": 200000,
+          "subsample_freq": 0,
+          "metric": "l1",
+          "deterministic": true,
+          "force_col_wise": true,
+          "verbosity": -1
+        },
+        "early_stopping_rounds": 50,
+        "best_iteration": 999,
+        "evaluated_iterations": 1000,
+        "selection_policy": "Lowest validation MAE across four prespecified configurations; exact ties prefer fewer leaves, then fewer trees. Final test is not loaded.",
+        "python_version": "3.13.14",
+        "package_versions": {
+          "lightgbm": "4.7.0",
+          "numpy": "2.5.3",
+          "pandas": "3.0.6",
+          "scikit-learn": "1.9.1"
+        },
+        "base_parameters": {
+          "objective": "regression_l1",
+          "metric": "l1",
+          "n_estimators": 1000,
+          "learning_rate": 0.05,
+          "num_leaves": 31,
+          "min_child_samples": 100,
+          "reg_lambda": 1.0,
+          "random_state": 42,
+          "n_jobs": 4,
+          "deterministic": true,
+          "force_col_wise": true,
+          "verbosity": -1
+        },
+        "selected_candidate": "leaves_127",
+        "tuning_trials": [
+          {
+            "candidate": "initial",
+            "parameter_overrides": {},
+            "best_iteration": 870,
+            "evaluated_iterations": 920,
+            "validation_metrics": {
+              "mae_kg": 26.39255821947914,
+              "rmse_kg": 45.61572580207548,
+              "r2_total": 0.9265533850953972,
+              "mae_reduction_vs_persistence_pct": 22.384387828598406,
+              "mae_reduction_vs_experience_drift_pct": 12.241153190308296
+            }
+          },
+          {
+            "candidate": "leaves_63",
+            "parameter_overrides": {
+              "num_leaves": 63
+            },
+            "best_iteration": 988,
+            "evaluated_iterations": 1000,
+            "validation_metrics": {
+              "mae_kg": 26.252545980045014,
+              "rmse_kg": 45.32339523228996,
+              "r2_total": 0.9274917409992434,
+              "mae_reduction_vs_persistence_pct": 22.79613782209271,
+              "mae_reduction_vs_experience_drift_pct": 12.706712935210662
+            }
+          },
+          {
+            "candidate": "leaves_127",
+            "parameter_overrides": {
+              "num_leaves": 127
+            },
+            "best_iteration": 999,
+            "evaluated_iterations": 1000,
+            "validation_metrics": {
+              "mae_kg": 26.241889547176825,
+              "rmse_kg": 45.246547871745854,
+              "r2_total": 0.9277374129961227,
+              "mae_reduction_vs_persistence_pct": 22.827476412075153,
+              "mae_reduction_vs_experience_drift_pct": 12.742147024314121
+            }
+          },
+          {
+            "candidate": "regularized_127",
+            "parameter_overrides": {
+              "num_leaves": 127,
+              "min_child_samples": 300,
+              "reg_lambda": 10.0
+            },
+            "best_iteration": 934,
+            "evaluated_iterations": 984,
+            "validation_metrics": {
+              "mae_kg": 26.25781306190882,
+              "rmse_kg": 45.25093457451831,
+              "r2_total": 0.9277234004417003,
+              "mae_reduction_vs_persistence_pct": 22.78064831251897,
+              "mae_reduction_vs_experience_drift_pct": 12.68919917142255
+            }
+          }
+        ],
+        "mae_reduction_vs_initial_model_pct": 0.5708755894345829
+      },
+      "refit_rows": 1094893,
+      "evaluation_rows": 118463,
+      "refit_end_exclusive": "2022-01-01",
+      "evaluation_end_exclusive": "2023-01-01",
+      "refit_parameters": {
+        "boosting_type": "gbdt",
+        "class_weight": null,
+        "colsample_bytree": 1.0,
+        "importance_type": "split",
+        "learning_rate": 0.05,
+        "max_depth": -1,
+        "min_child_samples": 100,
+        "min_child_weight": 0.001,
+        "min_split_gain": 0.0,
+        "n_estimators": 999,
+        "n_jobs": 4,
+        "num_leaves": 127,
+        "objective": "regression_l1",
+        "random_state": 42,
+        "reg_alpha": 0.0,
+        "reg_lambda": 1.0,
+        "subsample": 1.0,
+        "subsample_for_bin": 200000,
+        "subsample_freq": 0,
+        "metric": "l1",
+        "deterministic": true,
+        "force_col_wise": true,
+        "verbosity": -1
+      },
+      "refit_tree_count": 999,
+      "baseline_parameters": {
+        "global_drift": 13.688370123838585,
+        "experience_drift": {
+          "1": 27.077815319130135,
+          "2": 17.570965596751826,
+          "3-4": 12.188494610600726,
+          "5-8": 7.097850219355807,
+          "9-16": 2.716552366620087,
+          "17+": -1.829165522880589
+        },
+        "experience_counts": {
+          "1": 271582,
+          "2": 179547,
+          "3-4": 222381,
+          "5-8": 213352,
+          "9-16": 139545,
+          "17+": 68486
+        }
+      },
+      "evaluation_metrics": {
+        "persistence": {
+          "mae_kg": 30.966892869503557,
+          "rmse_kg": 52.9917372521438,
+          "r2_total": 0.8957192129232633,
+          "mae_reduction_vs_persistence_pct": 0.0,
+          "mae_reduction_vs_experience_drift_pct": -14.537512622273185
+        },
+        "global_drift": {
+          "mae_kg": 27.43199516623117,
+          "rmse_kg": 50.97339527908267,
+          "r2_total": 0.9035115987707466,
+          "mae_reduction_vs_persistence_pct": 11.415086809544206,
+          "mae_reduction_vs_experience_drift_pct": -1.462956126948045
+        },
+        "experience_drift": {
+          "mae_kg": 27.036463565982555,
+          "rmse_kg": 50.247985920737136,
+          "r2_total": 0.9062383366964197,
+          "mae_reduction_vs_persistence_pct": 12.692359288625044,
+          "mae_reduction_vs_experience_drift_pct": 0.0
+        },
+        "lightgbm": {
+          "mae_kg": 23.17312655390187,
+          "rmse_kg": 40.22754909260114,
+          "r2_total": 0.9399054437509454,
+          "mae_reduction_vs_persistence_pct": 25.16806044586104,
+          "mae_reduction_vs_experience_drift_pct": 14.289357787686253
+        }
+      }
+    }
+  ],
+  "pooled_metrics": {
+    "persistence": {
+      "mae_kg": 32.22509868531657,
+      "rmse_kg": 55.154383002785856,
+      "r2_total": 0.8885178843594422,
+      "mae_reduction_vs_persistence_pct": 0.0,
+      "mae_reduction_vs_experience_drift_pct": -14.043427473691917
+    },
+    "global_drift": {
+      "mae_kg": 28.66883469928424,
+      "rmse_kg": 53.175811287566205,
+      "r2_total": 0.8963728892365567,
+      "mae_reduction_vs_persistence_pct": 11.035696184392895,
+      "mae_reduction_vs_experience_drift_pct": -1.4579412994268237
+    },
+    "experience_drift": {
+      "mae_kg": 28.25686617736073,
+      "rmse_kg": 52.43748611997006,
+      "r2_total": 0.8992305548930387,
+      "mae_reduction_vs_persistence_pct": 12.314105060488057,
+      "mae_reduction_vs_experience_drift_pct": 0.0
+    },
+    "lightgbm": {
+      "mae_kg": 24.3754287351622,
+      "rmse_kg": 42.47360873222213,
+      "r2_total": 0.9338875175610373,
+      "mae_reduction_vs_persistence_pct": 24.35887016765316,
+      "mae_reduction_vs_experience_drift_pct": 13.736262959366396
+    }
+  },
+  "years_improved_vs_experience_drift": 3,
+  "prediction_file": "walk_forward_predictions.csv",
+  "prediction_sha256": "c58c8e66fb5a1631419d7066f0f84523fc687ec2a317305151ffb60c6c978993"
+}

@@ -14,6 +14,7 @@ import pandas as pd
 from powerlifting_forecaster.baselines import evaluate_baselines
 from powerlifting_forecaster.evaluation import regression_metrics
 from powerlifting_forecaster.features import CATEGORICAL_FEATURES, FEATURE_COLUMNS
+from powerlifting_forecaster.splits import TEST_START, VALIDATION_START
 
 
 MODEL_PARAMETERS = {
@@ -47,10 +48,11 @@ def prepare_features(
 def train_regressor(
     train: pd.DataFrame, validation: pd.DataFrame,
     parameters: dict[str, object] | None = None,
+    *, validation_start: str = VALIDATION_START, test_start: str = TEST_START,
 ) -> tuple[lgb.LGBMRegressor, dict[str, object]]:
     """Fit delta targets and score reconstructed totals against identical baseline rows."""
     # Reuse the chronological and target-consistency checks from baseline evaluation.
-    baseline_report = evaluate_baselines(train, validation)
+    baseline_report = evaluate_baselines(train, validation, validation_start, test_start)
     train_features = prepare_features(train)
     categories = {
         column: train_features[column].cat.categories.tolist() for column in CATEGORICAL_FEATURES

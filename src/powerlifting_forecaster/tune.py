@@ -6,6 +6,7 @@ from pathlib import Path
 import lightgbm as lgb
 import pandas as pd
 
+from powerlifting_forecaster.splits import TEST_START, VALIDATION_START
 from powerlifting_forecaster.train import (
     MODEL_PARAMETERS, load_training_splits, save_training_run, train_regressor,
 )
@@ -21,13 +22,17 @@ CANDIDATES = {
 
 def tune_regressor(
     train: pd.DataFrame, validation: pd.DataFrame,
+    *, validation_start: str = VALIDATION_START, test_start: str = TEST_START,
 ) -> tuple[lgb.LGBMRegressor, dict[str, object]]:
     """Select by validation MAE; break exact ties by fewer leaves, then fewer trees."""
     trials = []
     best_model, best_report, best_key, best_name = None, None, None, None
     for name, overrides in CANDIDATES.items():
         print(f"Training candidate: {name}", flush=True)
-        model, report = train_regressor(train, validation, parameters=overrides)
+        model, report = train_regressor(
+            train, validation, parameters=overrides,
+            validation_start=validation_start, test_start=test_start,
+        )
         metrics = report["validation_metrics"]["lightgbm"]
         trials.append({
             "candidate": name, "parameter_overrides": overrides.copy(),

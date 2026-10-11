@@ -1,0 +1,152 @@
+{
+  "inputs": {
+    "train": {
+      "file": "train.csv",
+      "sha256": "e690d4e68e1a1f83e978af0d3aef067b094e212b12ee0b074153e6becf2ad80e"
+    },
+    "validation": {
+      "file": "validation.csv",
+      "sha256": "33078ca61d1e3e634cd096fe0c74952391ee6a9ba74539f1515917d7c3e50668"
+    },
+    "test": {
+      "file": "test.csv",
+      "sha256": "93a217e61eb8fd6c11e5860a0c630bb1eafdaa5d69ecbe0e6cd092ebbb464429"
+    }
+  },
+  "selection_report": "lightgbm_tuning.json",
+  "selection_sha256": "844a4d7ec59b0a074e4405719e6076da16d0e2c2c30a6cf8f2ce8953f319e35b",
+  "selected_candidate": "regularized_127",
+  "feature_columns": [
+    "previous_total",
+    "previous_squat",
+    "previous_bench",
+    "previous_deadlift",
+    "prior_meets",
+    "days_since_previous_meet",
+    "days_since_first_meet",
+    "historical_best_total",
+    "recent_mean_total_3",
+    "mean_prior_gap_days",
+    "estimated_age",
+    "sex",
+    "equipment",
+    "federation",
+    "tested_category"
+  ],
+  "categorical_features": [
+    "sex",
+    "equipment",
+    "federation"
+  ],
+  "refit_rows": 1509939,
+  "refit_end_exclusive": "2025-01-01",
+  "refit_first_target_date": "1965-09-04",
+  "refit_last_target_date": "2024-12-29",
+  "refit_parameters": {
+    "boosting_type": "gbdt",
+    "class_weight": null,
+    "colsample_bytree": 1.0,
+    "importance_type": "split",
+    "learning_rate": 0.05,
+    "max_depth": -1,
+    "min_child_samples": 300,
+    "min_child_weight": 0.001,
+    "min_split_gain": 0.0,
+    "n_estimators": 341,
+    "n_jobs": 4,
+    "num_leaves": 127,
+    "objective": "regression_l1",
+    "random_state": 42,
+    "reg_alpha": 0.0,
+    "reg_lambda": 10.0,
+    "subsample": 1.0,
+    "subsample_for_bin": 200000,
+    "subsample_freq": 0,
+    "metric": "l1",
+    "deterministic": true,
+    "force_col_wise": true,
+    "verbosity": -1
+  },
+  "refit_tree_count": 341,
+  "baseline_parameters": {
+    "global_drift": 13.83501242765436,
+    "experience_drift": {
+      "1": 26.840543065137794,
+      "2": 17.689497766378885,
+      "3-4": 12.391089661505827,
+      "5-8": 7.398278461678827,
+      "9-16": 3.024887331413063,
+      "17+": -1.4885072127912005
+    },
+    "experience_counts": {
+      "1": 373086,
+      "2": 249147,
+      "3-4": 309252,
+      "5-8": 295933,
+      "9-16": 192334,
+      "17+": 90187
+    }
+  },
+  "refit_category_counts": {
+    "sex": 3,
+    "equipment": 6,
+    "federation": 401
+  },
+  "test_rows": 270856,
+  "test_start": "2025-01-01",
+  "test_first_target_date": "2025-01-01",
+  "test_last_target_date": "2026-09-20",
+  "test_unseen_category_rows": {
+    "sex": 0,
+    "equipment": 0,
+    "federation": 2509
+  },
+  "test_metrics": {
+    "persistence": {
+      "mae_kg": 30.372697411170513,
+      "rmse_kg": 53.61159468285377,
+      "r2_total": 0.8953750781475452,
+      "mae_reduction_vs_persistence_pct": 0.0,
+      "mae_reduction_vs_experience_drift_pct": -12.179851179249223
+    },
+    "global_drift": {
+      "mae_kg": 27.475369419167997,
+      "rmse_kg": 52.1474180031247,
+      "r2_total": 0.9010118254902743,
+      "mae_reduction_vs_persistence_pct": 9.539251495446477,
+      "mae_reduction_vs_experience_drift_pct": -1.4787330480430683
+    },
+    "experience_drift": {
+      "mae_kg": 27.07500241076161,
+      "rmse_kg": 51.50206618202077,
+      "r2_total": 0.9034467268969352,
+      "mae_reduction_vs_persistence_pct": 10.857432106758068,
+      "mae_reduction_vs_experience_drift_pct": 0.0
+    },
+    "lightgbm": {
+      "mae_kg": 23.55870048468878,
+      "rmse_kg": 42.532671653925924,
+      "r2_total": 0.9341489017646183,
+      "mae_reduction_vs_persistence_pct": 22.434612356740068,
+      "mae_reduction_vs_experience_drift_pct": 12.987263575183238
+    }
+  },
+  "target": "delta_total = target_total - previous_total",
+  "prediction": "predicted_total = previous_total + predicted_delta",
+  "primary_comparison": "MAE reduction versus experience-adjusted drift, chosen on validation.",
+  "selection_policy": "Freeze features, hyperparameters, and tree count from chronological validation; refit on train plus validation with no test-driven selection or early stopping.",
+  "history_policy": "Predict each meet using information known before that meet; earlier test-period results remain available to later meets. Lifter overlap is allowed.",
+  "category_policy": "Levels come from the pre-test refit data only; unseen categories become missing.",
+  "metric_policy": "MAE and RMSE are in kilograms; R-squared is computed on reconstructed totals. Each meet has equal weight.",
+  "model_file": "lightgbm_final.txt",
+  "model_sha256": "c1b0b2030400673ef8e0cb88738f13c168096b29c52013e6ed816710dce73fa3",
+  "prediction_file": "test_predictions.csv",
+  "prediction_sha256": "6eeb1022ec6546a8b77a85df8003e00d8c9085c32a927bd4722e4fc775876541",
+  "python_version": "3.13.14",
+  "package_versions": {
+    "lightgbm": "4.7.0",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1"
+  }
+}

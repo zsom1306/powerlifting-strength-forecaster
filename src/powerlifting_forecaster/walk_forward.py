@@ -9,7 +9,7 @@ import lightgbm as lgb
 import pandas as pd
 
 from powerlifting_forecaster.baselines import DriftBaselines, evaluate_baselines
-from powerlifting_forecaster.evaluation import regression_metrics
+from powerlifting_forecaster.evaluation import score_predictions
 from powerlifting_forecaster.features import CATEGORICAL_FEATURES, FEATURE_COLUMNS
 from powerlifting_forecaster.splits import VALIDATION_START
 from powerlifting_forecaster.train import prepare_features
@@ -17,7 +17,6 @@ from powerlifting_forecaster.tune import tune_regressor
 
 
 EVALUATION_YEARS = (2020, 2021, 2022)
-MODEL_NAMES = ["persistence", "global_drift", "experience_drift", "lightgbm"]
 
 
 def split_year(frame: pd.DataFrame, year: int) -> dict[str, pd.DataFrame]:
@@ -38,20 +37,6 @@ def split_year(frame: pd.DataFrame, year: int) -> dict[str, pd.DataFrame]:
     if any(part.empty for part in parts.values()):
         raise ValueError("Each fold must have nonempty training, selection, and evaluation periods.")
     return parts
-
-
-def score_predictions(predictions: pd.DataFrame) -> dict[str, dict[str, float | None]]:
-    """Score identical observations and express MAE improvements relative to baselines."""
-    scores = {
-        name: regression_metrics(predictions["actual_total"], predictions[name]) for name in MODEL_NAMES
-    }
-    for reference in ["persistence", "experience_drift"]:
-        reference_mae = scores[reference]["mae_kg"]
-        for metrics in scores.values():
-            metrics[f"mae_reduction_vs_{reference}_pct"] = (
-                100 * (1 - metrics["mae_kg"] / reference_mae) if reference_mae > 0 else None
-            )
-    return scores
 
 
 def evaluate_year(frame: pd.DataFrame, year: int) -> tuple[pd.DataFrame, dict[str, object]]:

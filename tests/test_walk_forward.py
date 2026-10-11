@@ -8,9 +8,10 @@ import numpy as np
 import pandas as pd
 
 from powerlifting_forecaster.features import CATEGORICAL_FEATURES, FEATURE_COLUMNS
+from powerlifting_forecaster.evaluation import MODEL_NAMES, score_predictions
 from powerlifting_forecaster.train import MODEL_PARAMETERS
 from powerlifting_forecaster.walk_forward import (
-    MODEL_NAMES, evaluate_walk_forward, evaluate_year, score_predictions, split_year,
+    evaluate_walk_forward, evaluate_year, split_year,
 )
 
 

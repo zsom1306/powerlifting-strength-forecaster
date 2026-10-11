@@ -1,0 +1,432 @@
+{
+  "inputs": {
+    "train": {
+      "file": "train.csv",
+      "sha256": "e690d4e68e1a1f83e978af0d3aef067b094e212b12ee0b074153e6becf2ad80e"
+    },
+    "test": {
+      "file": "test.csv",
+      "sha256": "93a217e61eb8fd6c11e5860a0c630bb1eafdaa5d69ecbe0e6cd092ebbb464429"
+    },
+    "model": {
+      "file": "lightgbm_final.txt",
+      "sha256": "c1b0b2030400673ef8e0cb88738f13c168096b29c52013e6ed816710dce73fa3"
+    },
+    "predictions": {
+      "file": "test_predictions.csv",
+      "sha256": "6eeb1022ec6546a8b77a85df8003e00d8c9085c32a927bd4722e4fc775876541"
+    },
+    "evaluation": {
+      "file": "final_test.json",
+      "sha256": "d00eac2e5e1cace8eb4300ba5a0964da1a70df4f8c2719f292687664380b81d4"
+    }
+  },
+  "test_rows": 270856,
+  "test_first_target_date": "2025-01-01",
+  "test_last_target_date": "2026-09-20",
+  "analysis_policy": "Post-evaluation descriptive analysis of the frozen model; no feature selection, tuning, or refitting. Each meet has equal weight; repeated lifters are not independent samples.",
+  "bias_definition": "Predicted minus actual total; positive bias means overprediction.",
+  "group_policy": "Fixed experience bands and right-inclusive gap bands in days; all test rows appear once in each grouping. Associations are descriptive, with no causal adjustment.",
+  "gap_labels": [
+    "1-90",
+    "91-180",
+    "181-365",
+    "366-730",
+    "731+"
+  ],
+  "test_metrics": {
+    "persistence": {
+      "mae_kg": 30.372697411170513,
+      "rmse_kg": 53.61159468285377,
+      "r2_total": 0.8953750781475452,
+      "mae_reduction_vs_persistence_pct": 0.0,
+      "mae_reduction_vs_experience_drift_pct": -12.179851179249223
+    },
+    "global_drift": {
+      "mae_kg": 27.475369419168,
+      "rmse_kg": 52.1474180031247,
+      "r2_total": 0.9010118254902743,
+      "mae_reduction_vs_persistence_pct": 9.539251495446466,
+      "mae_reduction_vs_experience_drift_pct": -1.4787330480430683
+    },
+    "experience_drift": {
+      "mae_kg": 27.07500241076161,
+      "rmse_kg": 51.50206618202077,
+      "r2_total": 0.9034467268969352,
+      "mae_reduction_vs_persistence_pct": 10.857432106758068,
+      "mae_reduction_vs_experience_drift_pct": 0.0
+    },
+    "lightgbm": {
+      "mae_kg": 23.55870048468878,
+      "rmse_kg": 42.532671653925924,
+      "r2_total": 0.9341489017646183,
+      "mae_reduction_vs_persistence_pct": 22.434612356740068,
+      "mae_reduction_vs_experience_drift_pct": 12.987263575183238
+    }
+  },
+  "overall_errors": {
+    "rows": 270856,
+    "lightgbm_mae_kg": 23.55870048468878,
+    "baseline_mae_kg": 27.07500241076161,
+    "lightgbm_rmse_kg": 42.532671653925924,
+    "bias_kg": 0.8962980839906076,
+    "median_absolute_error_kg": 13.553737415951673,
+    "p90_absolute_error_kg": 49.77384270094518,
+    "p95_absolute_error_kg": 76.98473123819436,
+    "within_25_kg_pct": 72.65668842484567,
+    "mae_reduction_vs_baseline_pct": 12.987263575183238
+  },
+  "errors_by_experience": [
+    {
+      "group": "1",
+      "rows": 56096,
+      "lightgbm_mae_kg": 22.83563343431996,
+      "baseline_mae_kg": 27.027248658938834,
+      "lightgbm_rmse_kg": 38.19246071990804,
+      "bias_kg": -0.18196747988131257,
+      "median_absolute_error_kg": 14.337963611898545,
+      "p90_absolute_error_kg": 48.651397339685474,
+      "p95_absolute_error_kg": 70.46786344364985,
+      "within_25_kg_pct": 71.2154164289789,
+      "mae_reduction_vs_baseline_pct": 15.508849152621995
+    },
+    {
+      "group": "2",
+      "rows": 41397,
+      "lightgbm_mae_kg": 21.123853132411586,
+      "baseline_mae_kg": 24.049208389847234,
+      "lightgbm_rmse_kg": 36.78140683069509,
+      "bias_kg": 0.7196881261773824,
+      "median_absolute_error_kg": 12.86350441956688,
+      "p90_absolute_error_kg": 44.84133793989679,
+      "p95_absolute_error_kg": 64.19420645081163,
+      "within_25_kg_pct": 74.74454670628306,
+      "mae_reduction_vs_baseline_pct": 12.164039705650499
+    },
+    {
+      "group": "3-4",
+      "rows": 57147,
+      "lightgbm_mae_kg": 21.258358042915745,
+      "baseline_mae_kg": 23.787524889512223,
+      "lightgbm_rmse_kg": 37.48489391374335,
+      "bias_kg": 0.6974034847416286,
+      "median_absolute_error_kg": 12.834378237356418,
+      "p90_absolute_error_kg": 44.42467154739585,
+      "p95_absolute_error_kg": 66.00287727574093,
+      "within_25_kg_pct": 75.01006177052165,
+      "mae_reduction_vs_baseline_pct": 10.632324541304305
+    },
+    {
+      "group": "5-8",
+      "rows": 59650,
+      "lightgbm_mae_kg": 22.346585707685996,
+      "baseline_mae_kg": 24.90447636880801,
+      "lightgbm_rmse_kg": 40.841975822621876,
+      "bias_kg": 1.6146676121668662,
+      "median_absolute_error_kg": 12.867808632039157,
+      "p90_absolute_error_kg": 47.211854578150984,
+      "p95_absolute_error_kg": 72.07004359971613,
+      "within_25_kg_pct": 74.73428331936294,
+      "mae_reduction_vs_baseline_pct": 10.270806835054291
+    },
+    {
+      "group": "9-16",
+      "rows": 40121,
+      "lightgbm_mae_kg": 25.630511767545052,
+      "baseline_mae_kg": 29.74939540221307,
+      "lightgbm_rmse_kg": 48.35914635763826,
+      "bias_kg": 1.4228398552469836,
+      "median_absolute_error_kg": 13.715504629651605,
+      "p90_absolute_error_kg": 54.6853525024768,
+      "p95_absolute_error_kg": 91.06493811787038,
+      "within_25_kg_pct": 71.79781161984995,
+      "mae_reduction_vs_baseline_pct": 13.845268379341968
+    },
+    {
+      "group": "17+",
+      "rows": 16445,
+      "lightgbm_mae_kg": 39.490212834244986,
+      "baseline_mae_kg": 47.627123094579716,
+      "lightgbm_rmse_kg": 69.10380081261674,
+      "bias_kg": 1.8198379074958564,
+      "median_absolute_error_kg": 19.04741703838954,
+      "p90_absolute_error_kg": 101.19101097496248,
+      "p95_absolute_error_kg": 157.1777958002657,
+      "within_25_kg_pct": 58.69869261173609,
+      "mae_reduction_vs_baseline_pct": 17.084614252631113
+    }
+  ],
+  "errors_by_gap": [
+    {
+      "group": "1-90",
+      "rows": 112656,
+      "lightgbm_mae_kg": 17.95993507477861,
+      "baseline_mae_kg": 20.402666804007826,
+      "lightgbm_rmse_kg": 35.37760536732462,
+      "bias_kg": 0.09039822629836153,
+      "median_absolute_error_kg": 10.49652223807415,
+      "p90_absolute_error_kg": 34.472214372157,
+      "p95_absolute_error_kg": 52.2565387479068,
+      "within_25_kg_pct": 82.67735406902429,
+      "mae_reduction_vs_baseline_pct": 11.972610015615093
+    },
+    {
+      "group": "91-180",
+      "rows": 47635,
+      "lightgbm_mae_kg": 20.30287328146426,
+      "baseline_mae_kg": 22.5792619064632,
+      "lightgbm_rmse_kg": 36.54859456120885,
+      "bias_kg": 1.4292532445350379,
+      "median_absolute_error_kg": 12.734339849643902,
+      "p90_absolute_error_kg": 40.883251221936625,
+      "p95_absolute_error_kg": 58.67889859268233,
+      "within_25_kg_pct": 76.2443581400231,
+      "mae_reduction_vs_baseline_pct": 10.081767218207126
+    },
+    {
+      "group": "181-365",
+      "rows": 71718,
+      "lightgbm_mae_kg": 24.534460571563688,
+      "baseline_mae_kg": 27.0050320338799,
+      "lightgbm_rmse_kg": 40.28123655332522,
+      "bias_kg": 1.1532569528502512,
+      "median_absolute_error_kg": 16.249783826480325,
+      "p90_absolute_error_kg": 50.9991222574323,
+      "p95_absolute_error_kg": 70.44399291166889,
+      "within_25_kg_pct": 67.23416715468919,
+      "mae_reduction_vs_baseline_pct": 9.148559643316434
+    },
+    {
+      "group": "366-730",
+      "rows": 24373,
+      "lightgbm_mae_kg": 32.07595602614223,
+      "baseline_mae_kg": 37.09191726072171,
+      "lightgbm_rmse_kg": 52.23244516596125,
+      "bias_kg": 2.093573530908413,
+      "median_absolute_error_kg": 20.727949558188016,
+      "p90_absolute_error_kg": 67.76006827518614,
+      "p95_absolute_error_kg": 97.68609051745291,
+      "within_25_kg_pct": 57.6908874574324,
+      "mae_reduction_vs_baseline_pct": 13.523057326268507
+    },
+    {
+      "group": "731+",
+      "rows": 14474,
+      "lightgbm_mae_kg": 58.673749097518744,
+      "baseline_mae_kg": 77.28289994342936,
+      "lightgbm_rmse_kg": 84.15045415315033,
+      "bias_kg": 2.125561913688007,
+      "median_absolute_error_kg": 39.56559812569142,
+      "p90_absolute_error_kg": 135.9642917372104,
+      "p95_absolute_error_kg": 177.83550901460958,
+      "within_25_kg_pct": 34.9246925521625,
+      "mae_reduction_vs_baseline_pct": 24.079260560269354
+    }
+  ],
+  "training_progression": [
+    {
+      "group": "1",
+      "rows": 301571,
+      "mean_delta_kg": 27.02062990141625,
+      "median_delta_kg": 22.66999999999996
+    },
+    {
+      "group": "2",
+      "rows": 199758,
+      "mean_delta_kg": 17.625212707375923,
+      "median_delta_kg": 15.870000000000005
+    },
+    {
+      "group": "3-4",
+      "rows": 247091,
+      "mean_delta_kg": 12.283580340846086,
+      "median_delta_kg": 12.5
+    },
+    {
+      "group": "5-8",
+      "rows": 235702,
+      "mean_delta_kg": 7.21052727596711,
+      "median_delta_kg": 9.07000000000005
+    },
+    {
+      "group": "9-16",
+      "rows": 154568,
+      "mean_delta_kg": 2.767365496092335,
+      "median_delta_kg": 6.800000000000011
+    },
+    {
+      "group": "17+",
+      "rows": 74666,
+      "mean_delta_kg": -1.684586023089492,
+      "median_delta_kg": 2.5
+    }
+  ],
+  "training_progression_policy": "Pre-2023 retained repeat-meet observations only; cross-sectional band summaries, not an individual athlete's expected trajectory.",
+  "permutation_importance": {
+    "sample_rows": 20000,
+    "repeats": 3,
+    "seed": 42,
+    "sampling_policy": "Uniform rows without replacement using NumPy default_rng; sort selected positions, then reuse the same permutations for every feature.",
+    "sample_original_mae_kg": 23.1985329797606,
+    "method": "Shuffle one predictor at a time and measure the increase in delta MAE; the original previous-total reconstruction offset stays fixed.",
+    "limitations": "Descriptive model reliance, not causation or additive contributions. Correlated predictors can mask importance; shuffling can create implausible feature combinations. Standard deviations describe repeat variability, not confidence intervals.",
+    "features": [
+      {
+        "feature": "recent_mean_total_3",
+        "mean_mae_increase_kg": 11.551547428473336,
+        "std_mae_increase_kg": 0.037641826874758096,
+        "repeat_increases_kg": [
+          11.583803228676857,
+          11.498744833953943,
+          11.572094222789211
+        ]
+      },
+      {
+        "feature": "previous_total",
+        "mean_mae_increase_kg": 10.031171379203874,
+        "std_mae_increase_kg": 0.07322023752469714,
+        "repeat_increases_kg": [
+          9.955284840839681,
+          10.008100471786719,
+          10.13012882498522
+        ]
+      },
+      {
+        "feature": "previous_deadlift",
+        "mean_mae_increase_kg": 8.269656270210886,
+        "std_mae_increase_kg": 0.10379454867704735,
+        "repeat_increases_kg": [
+          8.125816008501975,
+          8.366922936060128,
+          8.316229866070554
+        ]
+      },
+      {
+        "feature": "previous_squat",
+        "mean_mae_increase_kg": 8.251937465046185,
+        "std_mae_increase_kg": 0.14235688364819962,
+        "repeat_increases_kg": [
+          8.052881907037946,
+          8.377559057542435,
+          8.325371430558175
+        ]
+      },
+      {
+        "feature": "previous_bench",
+        "mean_mae_increase_kg": 4.06684198643923,
+        "std_mae_increase_kg": 0.0880012364748514,
+        "repeat_increases_kg": [
+          3.943272213247237,
+          4.1414413100737235,
+          4.11581243599673
+        ]
+      },
+      {
+        "feature": "sex",
+        "mean_mae_increase_kg": 4.042992005888826,
+        "std_mae_increase_kg": 0.12837475295226938,
+        "repeat_increases_kg": [
+          4.2245406795557585,
+          3.952636131320695,
+          3.9517992067900245
+        ]
+      },
+      {
+        "feature": "days_since_previous_meet",
+        "mean_mae_increase_kg": 3.914610446407354,
+        "std_mae_increase_kg": 0.12534347922444847,
+        "repeat_increases_kg": [
+          3.958668603082941,
+          4.041277840115459,
+          3.743884896023662
+        ]
+      },
+      {
+        "feature": "federation",
+        "mean_mae_increase_kg": 3.7009072185022007,
+        "std_mae_increase_kg": 0.03342436326178362,
+        "repeat_increases_kg": [
+          3.7448416539225846,
+          3.6940431834831706,
+          3.6638368181008474
+        ]
+      },
+      {
+        "feature": "historical_best_total",
+        "mean_mae_increase_kg": 2.18618942834467,
+        "std_mae_increase_kg": 0.02813004845936089,
+        "repeat_increases_kg": [
+          2.172032127772386,
+          2.2254647798573117,
+          2.161071377404312
+        ]
+      },
+      {
+        "feature": "equipment",
+        "mean_mae_increase_kg": 1.7564512191650141,
+        "std_mae_increase_kg": 0.04725175502426066,
+        "repeat_increases_kg": [
+          1.737029699622454,
+          1.710788736631887,
+          1.8215352212407012
+        ]
+      },
+      {
+        "feature": "prior_meets",
+        "mean_mae_increase_kg": 1.3984429805009693,
+        "std_mae_increase_kg": 0.008094628417010055,
+        "repeat_increases_kg": [
+          1.3968617992468282,
+          1.4090524006507152,
+          1.3894147416053642
+        ]
+      },
+      {
+        "feature": "estimated_age",
+        "mean_mae_increase_kg": 1.2044066633966928,
+        "std_mae_increase_kg": 0.016812189320098727,
+        "repeat_increases_kg": [
+          1.226791797878569,
+          1.2001533958519417,
+          1.1862747964595677
+        ]
+      },
+      {
+        "feature": "mean_prior_gap_days",
+        "mean_mae_increase_kg": 0.24867990769562334,
+        "std_mae_increase_kg": 0.014460979347458611,
+        "repeat_increases_kg": [
+          0.2682391706004026,
+          0.24407292657915747,
+          0.23372762590731
+        ]
+      },
+      {
+        "feature": "tested_category",
+        "mean_mae_increase_kg": 0.17907433094238576,
+        "std_mae_increase_kg": 0.009204404817291798,
+        "repeat_increases_kg": [
+          0.17758671760122624,
+          0.16861894759889395,
+          0.19101732762703705
+        ]
+      },
+      {
+        "feature": "days_since_first_meet",
+        "mean_mae_increase_kg": 0.16294058989138094,
+        "std_mae_increase_kg": 0.01663438367287289,
+        "repeat_increases_kg": [
+          0.17843526644942287,
+          0.17052264589379718,
+          0.13986385733092277
+        ]
+      }
+    ]
+  },
+  "package_versions": {
+    "lightgbm": "4.7.0",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1"
+  }
+}
